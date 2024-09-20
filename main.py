@@ -14,7 +14,6 @@ def sign_in():
     # 第一次运行需要扫码登录
     time.sleep(20)
 
-#122222
 
 # 搜索函数
 def search(keyword):
