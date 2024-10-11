@@ -2,12 +2,13 @@ from def_basic import *
 from def_run import *
 from urllib.parse import quote
 
+"""抓取搜索结果数据"""
 if __name__ == '__main__':
-
+    # name = ['标题', '作者', '笔记链接', '作者链接', '作者头像', '点赞数']
     # 搜索关键词
-    keyword = "payinone"
+    keyword = "三江侗寨"
     # 设置向下翻页爬取次数
-    times = 10
+    times = 2
 
     # 第1次运行需要登录，后面不用登录，可以注释掉
     # sign_in()

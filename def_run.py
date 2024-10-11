@@ -15,17 +15,17 @@ def sign_in():
 
 '''搜索函数'''
 def search(keyword):
-    global page
-    page = ChromiumPage()
-    page.get(f'https://www.xiaohongshu.com/search_result?keyword={keyword}&source=web_search_result_notes')
+    global search_page
+    search_page = ChromiumPage()
+    search_page.get(f'https://www.xiaohongshu.com/search_result?keyword={keyword}&source=web_search_result_notes')
 
 
-'''爬取函数'''
+'''爬取搜索列表函数'''
 def craw(times):
     contents = []
     for i in tqdm(range(1, times + 1)):
-        get_info(page, contents)
-        page_scroll_down(page)
+        get_info(search_page, contents)
+        page_scroll_down(search_page)
     return contents
 
 
@@ -36,7 +36,7 @@ def save_to_excel(contents):
     df =pd.DataFrame(columns=name, data=contents)
 
     # 使用 convert_like_to_int 函数处理 'like' 列
-    df['点赞数'] = df['点赞数'].apply(convert_like_to_int)
+    df['点赞数'] = df['点赞数'].apply(convert_count_to_int)
     # 删除重复行
     df = df.drop_duplicates()
     # 按点赞量降序排序
