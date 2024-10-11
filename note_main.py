@@ -19,6 +19,7 @@ df = pd.read_excel(excel_path)
 # 提取 '笔记链接' 字段的每个值
 note_links = df['笔记链接'].tolist()
 
+counter = 0
 note_main = []
 # 遍历每个链接并赋值给 note_link 进行操作
 for note_link in note_links:
@@ -37,6 +38,7 @@ for note_link in note_links:
         note_text = note_text.replace(f"#{tag1}", "").replace(tag1, "")
     clean_text = emoji.replace_emoji(note_text, replace="")
     clean_text = clean_text.replace(" ", "")
+    print(note_text)
 
     # 标签：tag
     tag = ' '.join(tag.text for tag in note_wrapper.eles('.tag'))
@@ -59,9 +61,14 @@ for note_link in note_links:
         chat_count = '0'  # 如果是'收藏'，则设置收藏数为0
 
     note_main.append([collect_count, chat_count,clean_text,tag,note_time,ip])
-    sleep_time = random.uniform(3, 5)
+    sleep_time = random.uniform(8, 12)
     print(f"暂停 {sleep_time:.2f} 秒...")
     time.sleep(sleep_time)
+    
+    # 每爬取60次暂停5分钟
+    if counter % 50 == 0:
+        print("已爬取50次，暂停10分钟...")
+        time.sleep(600) 
 
     """评论"""
 

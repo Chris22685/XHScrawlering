@@ -87,15 +87,6 @@ def auto_resize_column(excel_path):
 
 """将'XXX万'格式的数量转换为整数"""
 def convert_count_to_int(count_str):
-    """
-    将包含'万'的数字字符串转换为整数
-    
-    参数:
-        count_str: 字符串，例如 '1.1万', '2066'
-    
-    返回:
-        整数值
-    """
     # 处理 None 或空值
     if count_str is None:
         return 0

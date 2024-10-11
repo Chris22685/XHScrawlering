@@ -4,9 +4,10 @@ from urllib.parse import quote
 
 """抓取搜索结果数据"""
 if __name__ == '__main__':
-    # name = ['标题', '作者', '笔记链接', '作者链接', '作者头像', '点赞数']
+
     # 搜索关键词
     keyword = "三江侗寨"
+    
     # 设置向下翻页爬取次数
     times = 2
 
