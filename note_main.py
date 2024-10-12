@@ -68,7 +68,6 @@ for note_link in note_links[counter:]:
             note_text = note_text.replace(f"#{tag1}", "").replace(tag1, "")
         clean_text = emoji.replace_emoji(note_text, replace="")
         clean_text = clean_text.replace(" ", "")
-        print(note_text)
 
         # 标签：tag
         tag = ' '.join(tag.text for tag in note_wrapper.eles('.tag'))
@@ -88,11 +87,14 @@ for note_link in note_links[counter:]:
         chat_count = re.search(r'(\d+\.?\d*万?|\d+)|(评论)', chat_wrapper).group()
         if chat_count == '评论':
             chat_count = '0'  # 如果是'收藏'，则设置收藏数为0
+        
+        # 爬取评论
+        note_comments = scrape_comments(note_page)
 
-        note_main.append([collect_count, chat_count, clean_text, tag, note_time, ip])
+        note_main.append([collect_count, chat_count, clean_text, tag, note_time, ip, note_comments])
         logging.info(f"成功爬取第 {counter + 1} 条数据")
         
-        sleep_time = random.uniform(10, 12)
+        sleep_time = random.uniform(1, 3)
         logging.info(f"暂停 {sleep_time:.2f} 秒...")
         time.sleep(sleep_time)
         counter += 1
@@ -118,7 +120,7 @@ logging.info("爬取完成，开始保存数据到Excel")
 try:
     """插入表格"""
     df = pd.read_excel(excel_path)
-    new_names = ['收藏数','评论数','正文','标签','发布时间','IP']
+    new_names = ['收藏数','评论数','正文','标签','发布时间','IP','评论']
     new_data_df = pd.DataFrame(note_main, columns=new_names)
     logging.info(f"新爬取的数据数量: {len(new_data_df)}")
     result_df = pd.concat([df, new_data_df], axis=1)

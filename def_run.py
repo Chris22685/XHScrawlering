@@ -3,6 +3,8 @@ from DrissionPage import ChromiumPage
 import time
 import pandas as pd
 from tqdm import tqdm
+import logging
+import emoji
 
 '''登录函数'''
 def sign_in():
@@ -47,3 +49,31 @@ def save_to_excel(contents):
 
     excel_path = '/Users/cris/Documents/Project/Find_Coder/actual/XHScrawler/result.xlsx'
     auto_resize_column(excel_path)
+
+'''爬取评论函数'''
+def scrape_comments(note_page):
+    comments = []
+    try:
+        # 首先检查是否存在 "no-comments" 类
+        no_comments_element = note_page.ele('.no-comments')
+        if no_comments_element:
+            logging.info("该页面没有评论")
+            return "无评论"
+        
+        # 如果没有 "no-comments" 类，则尝试获取评论
+        comment_elements = note_page.eles('.comment-item')
+        
+        if not comment_elements:
+            logging.info("未找到评论元素，可能是页面结构变化")
+            return "未找到评论"
+        
+        for comment in comment_elements[:10]:  # 限制为10条评论
+            comment_text = comment.ele('.note-text').text
+            clean_text = emoji.replace_emoji(comment_text, replace="")
+            clean_text = clean_text.replace(" ", "")
+            comments.append(clean_text)
+    except Exception as e:
+        logging.error(f"爬取评论时出错: {str(e)}")
+        return "爬取评论失败"
+    
+    return "\n".join(comments) if comments else "无评论"
