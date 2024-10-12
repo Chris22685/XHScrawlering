@@ -1,8 +1,60 @@
-# -*- coding: utf-8 -*-
+import logging
+from urllib.parse import quote
+from def_basic import *
+from def_run import *
 
-import emoji
-note_text = '说是柳州，你们是不是只想到螺蛳粉，要不避开人群，来看看柳州的后花园，这里充满着侗族风情，准备好三天两夜，要怎么玩，玩多久，有什么特色美食，住哪里方便，跟我走 🙋‍♂行前准备 1⃣做攻略（小红书、某程、某音、马*窝） 2⃣🚄各大出行app/12306 3⃣住宿（各大第三方平台） 4⃣注意出行期间天气 📜行李准备 1⃣证件:身份证、学生证、优待证以及其他 2⃣洗护用品 3⃣当季衣物 4⃣电子设备 5⃣随身药品 6⃣其他杂物 🚗交通指南 最近的高铁站:三江站 🛖住宿推荐 1️⃣寨子不大，住宿可以不住景区 2️⃣景区内多以民宿为主，价格100-700不等，丰俭由人 	 📸景点推荐 1️⃣侗天宫 这是三江作为侗族自治县最为珍贵的民族文化遗产之一，代表了侗族文化的悠久古老，蕴含了侗族的宇宙观，世界观，生命观，彰显了侗族文化的高度和广度，可与世界各民族的历史及文化比肩。一座涵盖了中国侗族精神文化和物质文化的体验式旅游新地标； 	 2️⃣三江风雨桥 三江风雨桥是三江侗族自治县内的一处标志性景点，它将侗族的木构风雨桥与现代钢筋水泥结构相结合，成就了这座在国内长度和规模都名列前茅的特色风雨桥。 	 3️⃣三江鼓楼 鼓楼内部较大一棵主柱树龄有208年，第二主柱树龄206年，这在鼓楼建筑史上是仅有的。鼓楼的基座石上，雕刻有反映侗族抢花炮、踩歌堂、打油茶、斗鸡斗鸟、养蚕织布等日常生活场景的浮雕，画面栩栩如生，乡土气息浓郁，处处展现出侗民族悠久的历史文化 	 4️⃣多耶广场 市民娱乐的市民广场，在三江鼓楼附近 	 5️⃣程阳八寨 程阳八寨由程阳八个自然村寨组成，周围青山绿树环绕，景色优美。观看侗族风情的民俗表演，是观光摄影、领略侗族风情的好去处。 🍜美食推荐 1️⃣滑滑粉 用米浆蒸熟成米皮，然后加入花生碎、葱花、酸笋、辣椒、肉末、酱汁等制作而成 2️⃣油茶 油茶是少数民族平时比较常吃的美食，也常常用来招待客人。煮一锅油茶水，添上油茶果，配上一些小菜，可以一边慢品 3️⃣酸肉 酸肉以猪肉为原料，把猪肉切成约一斤重的肉块，用生盐腌两天，使肉质完全进盐味后稍微风干，然后用辣椒粉、糯米饭和一些甜酒糟搅拌均匀。 🗓行程安排 1️⃣抵达柳州—侗天宫景区—享用侗族特色油茶—侗乡鸟巢观看“坐妹” 2️⃣三江风雨桥—三江鼓楼—多耶广场—程阳风雨桥景区—程阳八寨 3️⃣吃完早饭—返程 '
-clean_text = emoji.replace_emoji(note_text, replace="")
-clean_text = clean_text.replace(" ", "")
+# 配置日志
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-print(clean_text)
+def encode_keyword(keyword):
+    """将关键词转为URL编码"""
+    try:
+        keyword_temp_code = quote(keyword.encode('utf-8'))
+        keyword_encode = quote(keyword_temp_code.encode('gb2312'))
+        return keyword_encode
+    except Exception as e:
+        logger.error(f"关键词编码失败: {str(e)}")
+        raise
+
+def scrape_search_results(keyword, times):
+    """抓取搜索结果数据"""
+    try:
+        logger.info(f"开始抓取关键词 '{keyword}' 的搜索结果")
+        
+        # 编码关键词
+        keyword_encode = encode_keyword(keyword)
+        logger.info(f"关键词编码完成: {keyword_encode}")
+        
+        # 搜索小红书文章
+        search(keyword_encode)
+        logger.info("搜索页面加载完成")
+        
+        # 爬取数据
+        contents = craw(times)
+        logger.info(f"爬取完成,共获取 {len(contents)} 条数据")
+        
+        return contents
+    except Exception as e:
+        logger.error(f"爬取过程中出现错误: {str(e)}")
+        raise
+
+if __name__ == '__main__':
+    # 配置参数
+    keyword = "三江侗寨"
+    times = 2
+    
+    try:
+        # 第1次运行需要登录，后面不用登录，可以取消下面这行的注释
+        # sign_in()
+        
+        # 抓取数据
+        contents = scrape_search_results(keyword, times)
+        
+        # 保存数据
+        save_to_excel(contents)
+        logger.info("数据已保存到Excel文件")
+        
+        logger.info("爬取任务完成")
+    except Exception as e:
+        logger.error(f"程序执行过程中出现错误: {str(e)}")
