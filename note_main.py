@@ -94,15 +94,15 @@ for note_link in note_links[counter:]:
         note_main.append([collect_count, chat_count, clean_text, tag, note_time, ip, note_comments])
         logging.info(f"成功爬取第 {counter + 1} 条数据")
         
-        sleep_time = random.uniform(1, 3)
+        sleep_time = random.uniform(4, 8)
         logging.info(f"暂停 {sleep_time:.2f} 秒...")
         time.sleep(sleep_time)
         counter += 1
         
         # 每爬取60次暂停5分钟
-        if counter % 50 == 0:
+        if counter % 100 == 0:
             logging.info(f"已爬取50次，暂停10分钟...")
-            time.sleep(600)
+            time.sleep(300)
         
         # 每次成功爬取后保存状态
         save_state(counter, note_main)
