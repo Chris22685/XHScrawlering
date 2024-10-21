@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def get_note_info(section):
     """从section中提取笔记信息"""
     try:
-        note_link = section.ele('tag:a', timeout=0).link
+        note_link = section.ele('css:.cover.ld.mask').attr('href')
         footer = section.ele('.footer', timeout=0.2)
         title = footer.ele('.title', timeout=0.2).text or "空标题"
         like = footer.ele('.like-wrapper like-active').text
@@ -60,7 +60,7 @@ def save_to_excel(df, file_path):
     logger.info(f"数据已保存到 {file_path}")
 
 if __name__ == '__main__':
-    author_link = "https://www.xiaohongshu.com/user/profile/62063c900000000021021710"
+    author_link = "https://www.xiaohongshu.com/user/profile/61b5a40f00000000100078d0"
     times = 2
     excel_path = '/Users/cris/Documents/Project/Find_Coder/actual/XHScrawler/result.xlsx'
 
