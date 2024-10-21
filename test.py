@@ -1,30 +1,14 @@
-import logging
 from DrissionPage import ChromiumPage
-import re
-import pandas as pd
-from def_basic import *
-from def_run import *
-import time
-import random
-import emoji
-import pickle
-import os
 
-note_link = 'https://www.xiaohongshu.com/explore/64a6cd11000000001201024b'
 
-note_page = ChromiumPage()
-note_page.get(note_link)
 
-no_comments_element = note_page.ele('.no-comments')
-if no_comments_element:
-    logging.info("该页面没有评论")
-    print("无评论")
+search_page = ChromiumPage()
+search_page.get(f'https://www.xiaohongshu.com/search_result?keyword=%25E8%2582%2587%25E5%2585%25B4%25E4%25BE%2597%25E5%25AF%25A8&source=web_explore_feed')
+container = search_page.ele('.feeds-page')
+sections = container.eles('.note-item')
+# note_link = sections[0].ele('tag:a', timeout=0).link
 
-comment_elements = note_page.eles('.comment-item')
-if not comment_elements:
-    logging.info("未找到评论元素，可能是页面结构变化")
-    print("未找到评论元素")
-
-for comment in comment_elements[:10]:  # 限制为10条评论
-    comment_text = comment.ele('.note-text').text
-    print(comment_text)
+# note_link2 = sections[0].ele('a.cover.ld.mask', timeout=0).attr('href')
+# note_link2 = sections[0].ele('a.cover.mask', timeout=5).attr('href')
+note_link = sections[0].ele('css:.cover.ld.mask').attr('href')
+print(note_link)

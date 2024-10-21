@@ -41,8 +41,8 @@ def scrape_search_results(keyword, times):
 
 if __name__ == '__main__':
     # 配置参数
-    keyword = "圣诞岛"
-    times = 10
+    keyword = "肇兴侗寨"
+    times = 2
     
     try:
         # 第1次运行需要登录，后面不用登录，可以取消下面这行的注释

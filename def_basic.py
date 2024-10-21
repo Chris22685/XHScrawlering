@@ -14,7 +14,7 @@ def get_info(search_page, contents):
     for section in sections:
         # 定位文章链接
         try:
-            note_link = section.ele('tag:a', timeout=0).link
+            note_link = section.ele('css:.cover.ld.mask').attr('href')
         except ElementNotFoundError:
             print("文章链接元素未找到。跳过当前循环...")
             continue

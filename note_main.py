@@ -101,7 +101,7 @@ for note_link in note_links[counter:]:
         
         # 每爬取60次暂停5分钟
         if counter % 100 == 0:
-            logging.info(f"已爬取50次，暂停10分钟...")
+            logging.info(f"已爬取100次，暂停5分钟...")
             time.sleep(300)
         
         # 每次成功爬取后保存状态
